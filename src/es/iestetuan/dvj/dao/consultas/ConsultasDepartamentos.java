@@ -2,6 +2,7 @@ package es.iestetuan.dvj.dao.consultas;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -16,7 +17,7 @@ public class ConsultasDepartamentos implements IDepartamentos {
         try
         {
         	Class.forName("org.postgresql.Driver");
-            conexion = DriverManager.getConnection("jdbc:mariadb://dam2.actividad,cf:5432/aadd-dam2", "aadd", "d1m2p0sgr3sql");
+            conexion = DriverManager.getConnection("jdbc:postgresql://dam2.actividad,cf:5432/aadd-dam2", "aadd", "d1m2p0sgr3sql");
             if (conexion != null)            
                 System.out.println("Connected");           
             else          
@@ -33,17 +34,19 @@ public class ConsultasDepartamentos implements IDepartamentos {
 	@Override
 	public void crearDepartamento(Departamentos departamento) {
 		
-        int DeptNum = 50;
-        String DeptNombre = "Informática";
-        String DeptLocalizacion = "Madrid";
+        int DeptNum = departamento.getDeptNum();
+        String DeptNombre = departamento.getDeptNombre();
+        String DeptLocalizacion = departamento.getLocalizacion();
             
         try
         {
             Connection conexion =getConexion();
-            Statement stmt = conexion.createStatement();
-            String q1 = "insert into departamentos values('" +DeptNum+ "', '" +DeptNombre+
-                                  "', '" +DeptLocalizacion+ "')";
-            int x = stmt.executeUpdate(q1);
+            String SentenciaSQL = "insert into departamentos values(?, ? , ?)";
+            PreparedStatement statement = conexion.prepareStatement(SentenciaSQL);
+            statement.setInt(1, DeptNum); 
+            statement.setString(2, DeptNombre);
+            statement.setString(3, DeptLocalizacion);
+            int x = statement.executeUpdate();
             if (x > 0)           
                 System.out.println("Successfully Inserted");           
             else          
@@ -61,16 +64,21 @@ public class ConsultasDepartamentos implements IDepartamentos {
 	@Override
 	public void modificarDepartamento(Departamentos departamento) {
 		
-        int DeptNum = 60;
-        String DeptNombre = "Comunicaciones";
+        int DeptNum = departamento.getDeptNum();
+        String DeptNombre = departamento.getDeptNombre();
+        //HABRIA QUE CREAR OTRO PARAMETRO PARA AÑADIR NUEVO VALOR
         String DatoModificar = "Informatica y Comunicaciones";
         try
         {
             Connection conexion =getConexion();
-            Statement stmt = conexion.createStatement();
-            String q1 = "UPDATE departamentos set dnombre = '" + DatoModificar +
-                    "' WHERE dept_no = '" +DeptNum+ "' AND dnombre = '" + DeptNombre + "'";
-            int x = stmt.executeUpdate(q1);
+            String SentenciaSQL = "UPDATE departamentos set dnombre = ?, WHERE dept_no = ?, AND dnombre = ?";
+            PreparedStatement statement = conexion.prepareStatement(SentenciaSQL);
+
+            statement.setString(1, DatoModificar);
+            statement.setInt(2, DeptNum); 
+            statement.setString(3, DeptNombre);
+
+            int x = statement.executeUpdate();
             if (x > 0)           
                 System.out.println("Successfully update");           
             else          
@@ -90,11 +98,12 @@ public class ConsultasDepartamentos implements IDepartamentos {
         try
         {
             Connection conexion =getConexion();
-            Statement stmt = conexion.createStatement();
-            // Deleting from database
-            String q1 = "DELETE from departamentos WHERE dept_no = '" + idDepartamento + "'";     
             
-            int x = stmt.executeUpdate(q1);
+            // Deleting from database
+            String SentenciaSQL = "DELETE from departamentos WHERE dept_no = ?";     
+            PreparedStatement statement = conexion.prepareStatement(SentenciaSQL);
+            statement.setInt(1, idDepartamento);
+            int x = statement.executeUpdate(SentenciaSQL);
             if (x > 0)           
                 System.out.println("Successfully delete");           
             else          
