@@ -15,8 +15,8 @@ public class ConsultaEmpleados implements IEmpleados {
 		Connection conexion = null;
         try
         {
-        	Class.forName("org.postgresql.Driver");
-            conexion = DriverManager.getConnection("jdbc:postgresql://dam2.actividad,cf:5432/aadd-dam2", "aadd", "d1m2p0sgr3sql");
+        	Class.forName("org.mariadb.jdbc.Driver");
+            conexion = DriverManager.getConnection("jdbc:mariadb://localhost:3306/aadd", "DVilla11", "admin");
             if (conexion != null)            
                 System.out.println("Connected");           
             else          
