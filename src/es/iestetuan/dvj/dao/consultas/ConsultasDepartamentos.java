@@ -16,8 +16,8 @@ public class ConsultasDepartamentos implements IDepartamentos {
 		Connection conexion = null;
         try
         {
-        	Class.forName("org.postgresql.Driver");
-            conexion = DriverManager.getConnection("jdbc:postgresql://dam2.actividad,cf:5432/aadd-dam2", "aadd", "d1m2p0sgr3sql");
+        	Class.forName("org.mariadb.jdbc.Driver");
+            conexion = DriverManager.getConnection("jdbc:mariadb://localhost:3306/aadd", "DVilla11", "admin");
             if (conexion != null)            
                 System.out.println("Connected");           
             else          
@@ -66,7 +66,7 @@ public class ConsultasDepartamentos implements IDepartamentos {
 		
         int DeptNum = departamento.getDeptNum();
         String DeptNombre = departamento.getDeptNombre();
-        //HABRIA QUE CREAR OTRO PARAMETRO PARA AÑADIR NUEVO VALOR
+        //HABRIA QUE CREAR OTRO PARAMETRO PARA Aï¿½ADIR NUEVO VALOR
         String DatoModificar = "Informatica y Comunicaciones";
         try
         {
